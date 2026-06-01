@@ -1,0 +1,3 @@
+time,car_type,seed,truncation,image_path
+2026-06-01T13:47:50,sports,796724,0.650,D:\car_srtp_project\outputs\app_generated\sports\20260601_134750_sports_seed796724_trunc0.65.png
+2026-06-01T13:48:24,sports,437112,0.650,D:\car_srtp_project\outputs\app_generated\sports\20260601_134824_sports_seed437112_trunc0.65.png

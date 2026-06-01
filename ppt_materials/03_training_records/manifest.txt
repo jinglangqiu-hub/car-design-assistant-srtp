@@ -1,0 +1,60 @@
+SRTP car type model training manifest
+Generated at: 2026-05-30 23:12:25
+Project root: /root/autodl-tmp/car_srtp_project
+Batch: 16
+Targets: sports=800 kimg, sedan=1000 kimg, suv=1000 kimg
+
+[sports]
+target_kimg=800
+run_dir=/root/autodl-tmp/car_srtp_project/outputs/type_models/sports/00001-compcars_sports_256_square-mirror-auto1-kimg800-batch16-ada-resumecustom
+snapshot=network-snapshot-000800.pkl
+final_model=/root/autodl-tmp/car_srtp_project/outputs/final_models/sports.pkl
+samples=/root/autodl-tmp/car_srtp_project/outputs/final_samples/sports
+
+[sedan]
+target_kimg=1000
+run_dir=/root/autodl-tmp/car_srtp_project/outputs/type_models/sedan/00001-compcars_sedan_256_square-mirror-auto1-kimg1000-batch16-ada-resumecustom
+snapshot=network-snapshot-001000.pkl
+final_model=/root/autodl-tmp/car_srtp_project/outputs/final_models/sedan.pkl
+samples=/root/autodl-tmp/car_srtp_project/outputs/final_samples/sedan
+
+[suv]
+target_kimg=1000
+run_dir=/root/autodl-tmp/car_srtp_project/outputs/type_models/suv/00001-compcars_suv_256_square-mirror-auto1-kimg1000-batch16-ada-resumecustom
+snapshot=network-snapshot-001000.pkl
+final_model=/root/autodl-tmp/car_srtp_project/outputs/final_models/suv.pkl
+samples=/root/autodl-tmp/car_srtp_project/outputs/final_samples/suv
+
+[continue:20260531_114709:sports]
+extra_kimg=1000
+batch=16
+resume=/root/autodl-tmp/car_srtp_project/outputs/final_models/sports.pkl
+run_dir=/root/autodl-tmp/car_srtp_project/outputs/type_models_continue/sports/00000-compcars_sports_256_square-mirror-auto1-kimg1000-batch16-ada-resumecustom
+snapshot=network-snapshot-001000.pkl
+final_model=/root/autodl-tmp/car_srtp_project/outputs/final_models/sports.pkl
+samples=/root/autodl-tmp/car_srtp_project/outputs/final_samples/sports
+sample_seeds=0-47
+sample_trunc=0.65
+
+[continue:20260531_114709:sedan]
+extra_kimg=1500
+batch=16
+resume=/root/autodl-tmp/car_srtp_project/outputs/final_models/sedan.pkl
+run_dir=/root/autodl-tmp/car_srtp_project/outputs/type_models_continue/sedan/00000-compcars_sedan_256_square-mirror-auto1-kimg1500-batch16-ada-resumecustom
+snapshot=network-snapshot-001500.pkl
+final_model=/root/autodl-tmp/car_srtp_project/outputs/final_models/sedan.pkl
+samples=/root/autodl-tmp/car_srtp_project/outputs/final_samples/sedan
+sample_seeds=0-47
+sample_trunc=0.65
+
+[continue:20260531_114709:suv]
+extra_kimg=1500
+batch=16
+resume=/root/autodl-tmp/car_srtp_project/outputs/final_models/suv.pkl
+run_dir=/root/autodl-tmp/car_srtp_project/outputs/type_models_continue/suv/00000-compcars_suv_256_square-mirror-auto1-kimg1500-batch16-ada-resumecustom
+snapshot=network-snapshot-001500.pkl
+final_model=/root/autodl-tmp/car_srtp_project/outputs/final_models/suv.pkl
+samples=/root/autodl-tmp/car_srtp_project/outputs/final_samples/suv
+sample_seeds=0-47
+sample_trunc=0.65
+
