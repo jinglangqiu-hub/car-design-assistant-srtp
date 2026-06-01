@@ -1,0 +1,51 @@
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local environments and caches
+.venv/
+venv/
+env/
+.conda/
+.cache/
+
+# Build outputs
+build/
+dist/
+installer/
+*.spec
+
+# Cloud/upload temporary artifacts
+cloud_upload/
+
+# Large data and model artifacts
+data/
+outputs/
+app/models/*.pkl
+*.pkl
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+
+# Installer and binary artifacts
+*.exe
+*.msi
+*.bin
+
+# Logs and training events
+*.log
+events.out.tfevents.*
+
+# Local scratch notes
+粘贴内容.txt
+pasted-text.txt
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

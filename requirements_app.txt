@@ -1,0 +1,11 @@
+torch
+numpy
+Pillow
+click
+requests
+tqdm
+scipy
+psutil
+imageio-ffmpeg
+pyspng
+
