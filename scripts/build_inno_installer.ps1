@@ -64,6 +64,8 @@ if ([string]::IsNullOrWhiteSpace($InnoCompiler) -or !(Test-Path $InnoCompiler)) 
 }
 
 New-Item -ItemType Directory -Force installer | Out-Null
+Remove-Item -Force "installer\CarDesignAssistant_Setup_v*.exe" -ErrorAction SilentlyContinue
+Remove-Item -Force "installer\CarDesignAssistant_Setup_v*.bin" -ErrorAction SilentlyContinue
 & $InnoCompiler "packaging\CarDesignAssistant.iss"
 if ($LASTEXITCODE -ne 0) {
     throw "Inno Setup compiler failed."
