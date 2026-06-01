@@ -15,6 +15,7 @@ env/
 build/
 dist/
 installer/
+release_assets/
 *.spec
 
 # Cloud/upload temporary artifacts
