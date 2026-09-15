@@ -434,31 +434,6 @@ powershell -ExecutionPolicy Bypass -File scripts\build_inno_installer.ps1
 powershell -ExecutionPolicy Bypass -File scripts\prepare_github_release_assets.ps1
 ```
 
-## 后续继续开发的关键信息
 
-优先级从高到低：
-
-1. 修复 `app/car_design_assistant.py` 和部分 Markdown 中的中文编码损坏问题，确保桌面 UI、状态提示和文档在 UTF-8 下正常显示。
-2. 为模型资产建立明确的 Release 版本命名，例如 `v1.0.0-models`、`v1.0.0-installer`，避免只依赖本机目录。
-3. 增加最小化健康检查脚本：检查 `legacy.py`、三类 `.pkl`、PyTorch、CUDA/CPU fallback、输出目录写入权限。
-4. 把桌面程序中的模型加载、生成、元数据写入拆成可测试模块，减少 GUI 与推理逻辑耦合。
-5. 增加 smoke test：在有模型的机器上用固定 seed 对三类模型各生成一张图，并验证文件和 metadata 是否写入。
-6. 如需继续提升生成质量，应优先从数据清洗和样本筛选入手；直接把 256 模型继续训练更久可能造成过拟合，尤其跑车类样本只有 1519 张。
-7. 如需做 512 x 512 增强实验，应重新构建 512 数据集并单独开实验分支，不要把当前 256 主线改乱。
-8. 若要公开分发，建议优先完善 Release 附件说明和安装包校验值，而不是把大文件强行提交进 Git。
-
-## 已删除的过期说明
-
-本次文档整理删除了以下不再代表当前项目状态的阶段性说明：
-
-- 旧根目录 README 草稿
-- 旧环境配置 README
-- 旧项目 TODO
-- `app/README.md`
-- `packaging/README_packaging.md`
-- 旧清理报告
-- 旧验收 checklist
-- 旧 GitHub 上传指南
-- `ppt_materials/` 中对应的重复阶段性 README/checklist/上传指南副本
 
 保留的文档主要用于结项证明、训练环境追溯、论文/PPT 组织和后续复现。
