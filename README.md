@@ -1,439 +1,91 @@
-# 汽车外观设计辅助系统 SRTP 项目
+# Car Design Assistant
 
-本仓库记录重庆大学 SRTP 项目“基于生成对抗网络的汽车造型设计辅助系统的开发”的代码、脚本、文档和最终交付组织方式。项目最终落地为一个 Windows 桌面程序：用户选择跑车、轿车或 SUV，设置随机种子和 truncation 参数后，程序加载对应的 StyleGAN2-ADA 微调模型生成 256 x 256 汽车外观概念图。
+**An AI-assisted early undergraduate project · Chongqing University SRTP · 2026**
 
-当前 README 按仓库和本机真实状态重写。旧的阶段性 README、TODO、清理报告和上传指南已经移除，避免继续把早期方案当作当前事实。
+A vehicle image generation prototype built with NVIDIA's **StyleGAN2-ADA**, three separately fine-tuned vehicle models, and a **Windows desktop interface**.
 
-## 当前真实状态
+[中文说明](README.zh-CN.md) · [Run the application](docs/reproduction.md) · [Training record](docs/experiments.md) · [v1.0.0 release](https://github.com/jinglangqiu-hub/car-design-assistant-srtp/releases/tag/v1.0.0)
 
-截至 2026-06-29，本项目的可交付主线已经完成：
+## Gallery
 
-- 已完成 CompCars 汽车图片清洗和三类训练数据集构建。
-- 已完成跑车、轿车、SUV 三个独立 StyleGAN2-ADA 微调模型训练。
-- 已完成云端追加训练，并把最终模型整理为 `sports.pkl`、`sedan.pkl`、`suv.pkl`。
-- 已完成 Tkinter 桌面程序，可加载三类模型并生成图片。
-- 已完成 PyInstaller 目录式打包和 Inno Setup 安装包制作脚本。
-- 本机工作区保留了完整运行资产：模型、训练输出、安装包、PPT/报告材料。
-- GitHub 普通 Git 仓库只追踪源码、脚本、说明文档和轻量展示材料；大体积数据、模型、安装包通过 `.gitignore` 排除，应通过 GitHub Release 或本地归档保存。
+| Sports · seed `796724` | Sports · seed `437112` |
+|:---:|:---:|
+| ![Archived sports output, seed 796724](assets/samples/sports-seed796724.png) | ![Archived sports output, seed 437112](assets/samples/sports-seed437112.png) |
 
-需要特别说明：当前 `app/car_design_assistant.py` 里的部分中文 UI 字符串已经呈现编码损坏/乱码状态，但程序结构仍能反映真实运行逻辑。后续继续迭代时，修复源码中文编码和界面文案应作为优先事项之一。
+Actual desktop-generated outputs archived on **June 1, 2026**, at **256 × 256** and **truncation ψ = 0.65**. “Sports” is the selected model label; these examples do not consistently exhibit sports-car proportions, illustrating limited category control. Fine details remain imperfect. These selected examples are not a representative evaluation. [Image provenance and original metadata](assets/README.md).
 
-## 技术栈
+The archived sample ZIP contains these same two sports images. Sedan/SUV examples, a GUI screenshot, and a recorded demo are not currently included; this gallery does not demonstrate all three models.
 
-### 训练与生成
+## Project background & AI assistance
 
-- Python
-- PyTorch
-- CUDA / NVIDIA GPU
-- StyleGAN2-ADA PyTorch：`refs/stylegan2-ada-pytorch/`
-- NumPy、Pillow
-- CompCars 数据集
+This project was developed for the **Student Research Training Program (SRTP) at Chongqing University**, under the title “基于生成对抗网络的汽车造型设计辅助系统的开发”. It represents one of my earliest attempts to explore deep learning through an AI-assisted development workflow.
 
-### 桌面应用
+The work focused on adapting an existing implementation to vehicle images and integrating the trained models into a desktop prototype. **It does not propose a new GAN architecture or establish an improvement over StyleGAN2-ADA.**
 
-- Python 3.10 系列本地环境
-- Tkinter / ttk
-- PyTorch 推理
-- Pillow 图片显示与保存
-- CSV 记录生成元数据
+Generative AI was used extensively in coding, debugging, and documentation. Project-specific scripts and the application should be read as AI-assisted work, rather than evidence of independently authored algorithms. My project work centered on carrying out data preparation, training, environment setup, model integration, and delivery. A reliable line-by-line human/AI authorship breakdown was not recorded, so none is claimed here.
 
-### 打包与交付
+## What was built
 
-- PyInstaller：生成 `dist/CarDesignAssistant/`
-- Inno Setup：生成 `installer/CarDesignAssistant_Setup_v1.0.0.exe` 和分卷 `.bin`
-- PowerShell 脚本：Windows 本地构建、Release 资产整理
-- Bash 脚本：云端训练、继续训练、采样
+| Stage | Implementation | Evidence |
+|---|---|---|
+| Data preparation | Filter CompCars views, crop bounding boxes, pad/resize to 256 × 256, group into three project categories | [Preparation scripts](experiments/), [dataset builder](scripts/build_type_dataset_zips.py) |
+| Model adaptation | Fine-tune sports, sedan, and SUV models from a shared car baseline, then continue training | [Training scripts](scripts/), [archived manifest](ppt_materials/03_training_records/manifest.txt) |
+| Desktop inference | Tkinter UI with model selection, seed, truncation, batch generation, PNG saving, and CSV metadata | [Application](app/car_design_assistant.py) |
+| Windows delivery | PyInstaller directory bundle and Inno Setup split installer | [Build script](scripts/build_pyinstaller_app.ps1), [installer configuration](packaging/CarDesignAssistant.iss), [release](https://github.com/jinglangqiu-hub/car-design-assistant-srtp/releases/tag/v1.0.0) |
 
-## 项目真实开发流程
+### Data & training summary
 
-### 1. 立项与早期方案
+| Project category | Training images | First fine-tuning stage | Continued stage | Model |
+|---|---:|---:|---:|---|
+| Sports | 1,519 | 800 kimg | +1,000 kimg | `sports.pkl` |
+| Sedan | 5,492 | 1,000 kimg | +1,500 kimg | `sedan.pkl` |
+| SUV | 9,889 | 1,000 kimg | +1,500 kimg | `suv.pkl` |
 
-项目最初目标是做“汽车外观设计辅助系统”，早期设想包含更复杂的条件标签，例如车型和颜色组合标签。后续根据时间、数据质量、训练成本和结项展示要求，主线收敛为更稳妥的三类车型控制：跑车、轿车、SUV。
+Counts come from the archived dataset summary; training budgets and snapshots are recorded in the manifest. A **kimg** is 1,000 training images shown to the discriminator, not 1,000 unique images. Category names reflect the project's custom CompCars grouping; see [experimental details](docs/experiments.md).
 
-这也是本次文档清理要删除旧 TODO 和旧 README 的原因：早期文档中的 18 标签、Gradio Demo、512 分辨率增强实验等内容属于规划阶段，不再代表当前项目事实。
+Recorded cloud environment: **Ubuntu 22.04 · RTX 5090 32 GB · Python 3.12.3 · PyTorch 2.7.0+cu128**, batch size 16. These are historical records, not a newly validated compatibility guarantee.
 
-### 2. 数据清洗与三类数据集构建
+### Engineering choices
 
-项目基于 CompCars 数据整理汽车图片，清洗后图片按 `make_id__model_id__year__image_id.jpg` 方式命名。三类数据集由脚本生成：
+- **Three independent models:** reduced changes to the existing framework and made vehicle selection straightforward. The cost is three weight files, separate training runs, and no shared conditional model.
+- **256 × 256 output:** kept training and delivery manageable, with limited detail and fidelity.
+- **Seed and truncation controls:** expose latent sampling through a simple interface. They do not provide text, sketch, geometry, or component-level control.
 
-```powershell
-python scripts\build_type_dataset_zips.py --mapping-json data\type_datasets\srtp_type_mapping.json
-```
+## Results & limitations
 
-实际三类数据规模：
+The project delivered an end-to-end training-to-desktop workflow and a Windows release. Its evidence supports an **early learning and engineering exercise**, with these limits:
 
-| 类别 | 标识 | 图片数量 | 训练 zip |
-|---|---:|---:|---|
-| 跑车 | `sports` | 1519 | `compcars_sports_256_square.zip` |
-| 轿车 | `sedan` | 5492 | `compcars_sedan_256_square.zip` |
-| SUV | `suv` | 9889 | `compcars_suv_256_square.zip` |
+- Category training scripts use `--metrics=none`; no verified FID/KID results are reported. An older general training script requests FID, but no corresponding validated result is included.
+- There is no controlled baseline comparison, ablation, repeated-run evaluation, or evidence that continued training quantitatively improved quality.
+- Samples were inspected visually; diversity, memorization, and generalization were not systematically measured.
+- Outputs are low-resolution raster images, not CAD models or engineering-ready designs.
+- A complete dependency lockfile and the shared `baseline_240` checkpoint are absent from Git. Exact historical training reproduction from a fresh clone is not guaranteed.
 
-三类映射文件为：
+The main lesson is the distinction between making a pipeline run and demonstrating a research claim: data provenance, environment capture, quantitative evaluation, and controlled comparisons need to be planned from the start.
 
-```text
-data/type_datasets/srtp_type_mapping.json
-```
+## Run & explore
 
-数据集 zip 属于大文件，默认不进入 Git。若新机器需要复现训练，应从 Release 资产或本地备份恢复到 `data/type_datasets/`。
-
-### 3. 云端训练环境迁移
-
-正式训练迁移到云端 GPU 环境完成。本项目记录的云端主环境为：
-
-```text
-Project root: /root/autodl-tmp/car_srtp_project
-OS: Ubuntu 22.04
-GPU: NVIDIA GeForce RTX 5090 32GB
-Python: 3.12.3
-PyTorch: 2.7.0+cu128
-CUDA runtime: 12.8
-```
-
-详细环境、命令和训练监控记录保留在：
-
-```text
-docs/cloud_env_config.md
-outputs/final_models/manifest.txt
-ppt_materials/03_training_records/manifest.txt
-```
-
-### 4. 三类独立模型初训
-
-项目最终没有采用单一条件模型，而是采用“三类独立微调模型”的工程路线。这样可以直接满足结项展示中按车型选择生成的需求，且对现有 StyleGAN2-ADA 代码改动更少。
-
-云端训练总控脚本：
-
-```bash
-/root/autodl-tmp/car_srtp_project/scripts/cloud_train_all_type_models.sh 800 1000 1000 16
-```
-
-含义：
-
-```text
-sports: 800 kimg
-sedan: 1000 kimg
-suv: 1000 kimg
-batch: 16
-```
-
-脚本会顺序训练三类模型，生成样例图，并写入：
-
-```text
-outputs/final_models/manifest.txt
-```
-
-### 5. 追加训练
-
-第一轮正式训练后，项目继续从三个最终模型出发进行追加训练，而不是回到通用 baseline 重新训练。追加训练脚本：
-
-```bash
-/root/autodl-tmp/car_srtp_project/scripts/cloud_continue_all_type_models.sh 1000 1500 1500 16
-```
-
-含义：
-
-```text
-sports: +1000 kimg
-sedan:  +1500 kimg
-suv:    +1500 kimg
-batch:  16
-```
-
-追加训练后的最终模型仍覆盖输出到：
-
-```text
-outputs/final_models/sports.pkl
-outputs/final_models/sedan.pkl
-outputs/final_models/suv.pkl
-```
-
-并追加记录到 `manifest.txt`。
-
-### 6. 本地模型整理
-
-训练完成后，本地通过脚本下载最终模型、样例图和日志：
+Clone the repository, obtain trusted weights separately, install a compatible environment, and run:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\download_final_assets.ps1
+python app\car_design_assistant.py
 ```
 
-该脚本会把云端 `outputs/final_models/` 下载到本地，并复制三类模型到桌面程序默认读取目录：
-
-```text
-app/models/sports.pkl
-app/models/sedan.pkl
-app/models/suv.pkl
-```
-
-当前 GitHub 仓库只追踪 `app/models/.gitkeep`，不会追踪 `.pkl` 模型本体。
-
-### 7. 桌面程序开发
-
-桌面程序入口：
-
-```text
-app/car_design_assistant.py
-```
-
-核心运行逻辑：
-
-- 程序启动后定位项目根目录。
-- 查找 `refs/stylegan2-ada-pytorch/legacy.py`。
-- 根据用户选择加载对应模型：
-  - `sports` -> `sports.pkl`
-  - `sedan` -> `sedan.pkl`
-  - `suv` -> `suv.pkl`
-- 根据 seed 和 truncation 调用 StyleGAN2-ADA 生成图片。
-- 图片保存到 `outputs/app_generated/<type>/`。
-- 参数记录追加到 `outputs/app_generated/metadata.csv`。
-
-本地源码运行推荐命令：
-
-```powershell
-.\start_desktop_app.cmd
-```
-
-或直接指定项目专用 Python：
-
-```powershell
-D:\anaconda\envs\car_srtp_clean\python.exe app\car_design_assistant.py
-```
-
-依赖列表：
-
-```powershell
-pip install -r requirements_app.txt
-```
-
-### 8. PyInstaller 打包
-
-PyInstaller 构建脚本：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\build_pyinstaller_app.ps1
-```
-
-若环境中没有 PyInstaller：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\build_pyinstaller_app.ps1 -InstallPyInstaller
-```
-
-脚本会检查模型是否存在，并把运行所需依赖、StyleGAN2-ADA 代码和三类模型复制进打包目录：
-
-```text
-dist/CarDesignAssistant/
-```
-
-打包后可直接运行：
-
-```text
-dist/CarDesignAssistant/CarDesignAssistant.exe
-```
-
-### 9. Inno Setup 安装包
-
-安装包构建脚本：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\build_inno_installer.ps1
-```
-
-如果脚本找不到 `ISCC.exe`，手动指定：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\build_inno_installer.ps1 -InnoCompiler "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
-```
-
-安装包配置：
-
-```text
-packaging/CarDesignAssistant.iss
-```
-
-本地交付资产：
-
-```text
-installer/CarDesignAssistant_Setup_v1.0.0.exe
-installer/CarDesignAssistant_Setup_v1.0.0-1.bin
-installer/CarDesignAssistant_Setup_v1.0.0-2.bin
-installer/CarDesignAssistant_Setup_v1.0.0-3.bin
-```
-
-安装包和分卷文件体积较大，不进入普通 Git 提交。
-
-### 10. GitHub Release 资产整理
-
-用于整理 Release 附件的脚本：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\prepare_github_release_assets.ps1
-```
-
-脚本会从本机工作区收集：
-
-- 安装包 `.exe` 和 `.bin`
-- 三类 `.pkl` 模型
-- `manifest.txt`
-- 三类训练数据集 zip
-- 最终样例和桌面端生成样例 zip
-
-输出目录：
-
-```text
-release_assets/
-```
-
-上传脚本：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\upload_github_release_assets.ps1
-```
-
-使用该脚本前需要确认 GitHub CLI 已登录，并确认目标 tag/release。普通 README 更新只需要 `git push`，大文件交付需要 Release 附件。
-
-## 当前仓库结构
-
-```text
-app/
-  car_design_assistant.py        # Tkinter 桌面程序入口
-  models/.gitkeep               # 模型目录占位；真实 .pkl 不进 Git
-
-data/                           # 本地数据目录；不进 Git
-
-docs/
-  cloud_env_config.md           # 云端训练环境与过程记录
-  paper_outline.md              # 论文/结项报告提纲
-  slides_outline.md             # 答辩 PPT 提纲
-  *.docx / *.pptx               # 结项报告、中期报告、答辩 PPT 等材料
-
-experiments/
-  prepare_compcars_*.py         # 数据准备实验脚本
-
-outputs/                        # 本地训练/生成结果；不进 Git
-
-packaging/
-  CarDesignAssistant.iss        # Inno Setup 配置
-
-ppt_materials/
-  01_report_and_docs/           # PPT/结项材料归档
-  02_generated_samples/         # 展示样例
-  03_training_records/          # 训练记录
-  04_dataset_and_model_info/    # 数据集和模型摘要
-  05_desktop_and_packaging/     # 桌面端与打包材料
-  06_github_release/            # Release 资产摘要和脚本副本
-
-refs/
-  stylegan2-ada-pytorch/        # 训练和推理依赖
-  sefa/                         # 参考代码
-
-scripts/
-  build_type_dataset_zips.py
-  cloud_train_all_type_models.sh
-  cloud_continue_all_type_models.sh
-  download_final_assets.ps1
-  build_pyinstaller_app.ps1
-  build_inno_installer.ps1
-  prepare_github_release_assets.ps1
-  upload_github_release_assets.ps1
-
-requirements_app.txt
-start_desktop_app.cmd
-```
-
-## Git 与大文件规则
-
-当前 `.gitignore` 明确排除了以下大体积或可再生成资产：
-
-```text
-data/
-outputs/
-dist/
-installer/
-release_assets/
-app/models/*.pkl
-*.pkl
-*.zip
-*.exe
-*.bin
-```
-
-因此，克隆 GitHub 仓库后不能直接得到完整可运行系统。新机器要运行或继续开发，需要补齐：
-
-```text
-app/models/sports.pkl
-app/models/sedan.pkl
-app/models/suv.pkl
-refs/stylegan2-ada-pytorch/
-```
-
-若要复现训练，还需要补齐：
-
-```text
-data/type_datasets/compcars_sports_256_square.zip
-data/type_datasets/compcars_sedan_256_square.zip
-data/type_datasets/compcars_suv_256_square.zip
-data/type_datasets/srtp_type_mapping.json
-```
-
-## 常用命令
-
-### 启动桌面程序
-
-```powershell
-.\start_desktop_app.cmd
-```
-
-### 从源码启动
-
-```powershell
-D:\anaconda\envs\car_srtp_clean\python.exe app\car_design_assistant.py
-```
-
-### 构建三类训练数据集
-
-```powershell
-python scripts\build_type_dataset_zips.py --mapping-json data\type_datasets\srtp_type_mapping.json
-```
-
-### 云端初训
-
-```bash
-PROJECT_ROOT=/root/autodl-tmp/car_srtp_project \
-bash scripts/cloud_train_all_type_models.sh 800 1000 1000 16
-```
-
-### 云端追加训练
-
-```bash
-PROJECT_ROOT=/root/autodl-tmp/car_srtp_project \
-bash scripts/cloud_continue_all_type_models.sh 1000 1500 1500 16
-```
-
-### 下载最终模型
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\download_final_assets.ps1
-```
-
-### 构建桌面程序
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\build_pyinstaller_app.ps1
-```
-
-### 构建安装包
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\build_inno_installer.ps1
-```
-
-### 整理 GitHub Release 附件
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\prepare_github_release_assets.ps1
-```
-
-
-
-保留的文档主要用于结项证明、训练环境追溯、论文/PPT 组织和后续复现。
+**A clone alone is insufficient:** model weights and training data are excluded from Git. Follow the [run guide](docs/reproduction.md) for model placement, environment checks, installer files, and training prerequisites. Only load trusted `.pkl` weights.
+
+| Location | Purpose |
+|---|---|
+| [`app/`](app/) | Desktop application; `app/models/` is a placeholder for weights |
+| [`assets/`](assets/) | Traceable README gallery assets |
+| [`docs/`](docs/README.md) | Current guides and historical document index |
+| [`experiments/`](experiments/) and [`scripts/`](scripts/) | Data preparation, training, generation, packaging |
+| [`ppt_materials/`](ppt_materials/README.md) | Historical defense materials and training records |
+| [`refs/`](refs/) | Third-party StyleGAN2-ADA and SeFa code |
+
+## References & permissions
+
+- **StyleGAN2-ADA:** Tero Karras et al., *Training Generative Adversarial Networks with Limited Data*, NeurIPS 2020. [Paper](https://arxiv.org/abs/2006.06676) · [NVIDIA implementation](https://github.com/NVlabs/stylegan2-ada-pytorch) · [included license](refs/stylegan2-ada-pytorch/LICENSE.txt).
+- **CompCars:** Linjie Yang, Ping Luo, Chen Change Loy, Xiaoou Tang, *A Large-Scale Car Dataset for Fine-Grained Categorization and Verification*, CVPR 2015. [Official dataset and terms](https://mmlab.ie.cuhk.edu.hk/datasets/comp_cars/).
+- **SeFa reference code:** Yujun Shen and Bolei Zhou, *Closed-Form Factorization of Latent Semantics in GANs*, CVPR 2021. [Upstream](https://github.com/genforce/sefa) · [included license](refs/sefa/LICENSE). It is not part of the final desktop inference path.
+
+There is **no blanket MIT license** for this repository. See [LICENSE](LICENSE) and [third-party/data notices](THIRD_PARTY_NOTICES.md). Obtain CompCars through its official access process; do not redistribute original or processed training images. Historical release availability does not establish unrestricted redistribution or commercial-use rights for weights/installers.

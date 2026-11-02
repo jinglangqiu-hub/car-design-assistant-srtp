@@ -50,7 +50,6 @@ function New-ZipFromDirectory {
 
 $installerDir = Join-Path $out "installer"
 $modelsDir = Join-Path $out "models"
-$datasetsDir = Join-Path $out "type_datasets"
 $samplesDir = Join-Path $out "samples"
 
 Copy-OptionalPattern "installer\CarDesignAssistant_Setup_v*.exe" $installerDir
@@ -61,10 +60,10 @@ Copy-RequiredFile "app\models\sedan.pkl" $modelsDir
 Copy-RequiredFile "app\models\suv.pkl" $modelsDir
 Copy-OptionalPattern "outputs\final_models\manifest.txt" $modelsDir
 
-Copy-RequiredFile "data\type_datasets\compcars_sports_256_square.zip" $datasetsDir
-Copy-RequiredFile "data\type_datasets\compcars_sedan_256_square.zip" $datasetsDir
-Copy-RequiredFile "data\type_datasets\compcars_suv_256_square.zip" $datasetsDir
-Copy-RequiredFile "data\type_datasets\srtp_type_mapping.json" $datasetsDir
+# CompCars training images must not be staged for public redistribution.
+Copy-RequiredFile "configs\srtp_type_mapping.json" $out
+Copy-RequiredFile "LICENSE" $out
+Copy-RequiredFile "THIRD_PARTY_NOTICES.md" $out
 
 New-Item -ItemType Directory -Force $samplesDir | Out-Null
 New-ZipFromDirectory "outputs\final_samples" (Join-Path $samplesDir "final_samples.zip")

@@ -2,7 +2,7 @@ param(
     [string]$Repo = "jinglangqiu-hub/car-design-assistant-srtp",
     [string]$Tag = "v1.0.0",
     [string]$AssetsRoot = "release_assets",
-    [string]$Proxy = "http://127.0.0.1:10809",
+    [string]$Proxy = "",
     [int]$MaxRetries = 3
 )
 
@@ -67,6 +67,19 @@ function Upload-OneAsset {
 }
 
 $files = Get-ChildItem $AssetsRoot -Recurse -File | Sort-Object Length, Name
+# Fail before any upload if old staging contents contain datasets or unknown files.
+$allowedNames = @(
+    "sports.pkl", "sedan.pkl", "suv.pkl", "manifest.txt",
+    "srtp_type_mapping.json", "final_samples.zip", "app_generated_samples.zip",
+    "LICENSE", "THIRD_PARTY_NOTICES.md"
+)
+$blocked = @($files | Where-Object {
+    ($_.Name -notin $allowedNames) -and
+    ($_.Name -notmatch '^CarDesignAssistant_Setup_v[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9]+)?\.(?:exe|bin)$')
+})
+if ($blocked.Count -gt 0) {
+    throw ("Refusing unapproved release assets (training datasets must stay private): " + (($blocked | ForEach-Object { $_.Name }) -join ", "))
+}
 Write-Host "Release upload target: $Repo $Tag"
 Write-Host "Proxy: $Proxy"
 Write-Host "Files: $($files.Count)"

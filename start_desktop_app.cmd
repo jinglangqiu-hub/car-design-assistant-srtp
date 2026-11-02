@@ -3,11 +3,10 @@ setlocal
 
 set "PROJECT_ROOT=%~dp0"
 if "%PROJECT_ROOT:~-1%"=="\" set "PROJECT_ROOT=%PROJECT_ROOT:~0,-1%"
-set "PYTHON_EXE=D:\anaconda\envs\car_srtp_clean\python.exe"
-
-if not exist "%PYTHON_EXE%" (
-  echo [ERROR] Python not found: %PYTHON_EXE%
-  echo Please check the conda environment path.
+if not defined PYTHON_EXE set "PYTHON_EXE=python"
+"%PYTHON_EXE%" --version >nul 2>nul
+if errorlevel 1 (
+  echo [ERROR] Python not found. Activate your environment or set PYTHON_EXE.
   pause
   exit /b 1
 )

@@ -1,0 +1,18 @@
+Repository licensing notice
+
+This repository combines project-specific materials and third-party software.
+It is not offered under a single blanket open-source license.
+
+1. refs/stylegan2-ada-pytorch/ and copies/modifications of its code remain
+   subject to refs/stylegan2-ada-pytorch/LICENSE.txt (NVIDIA Source Code License).
+2. refs/sefa/ retains refs/sefa/LICENSE. Embedded third-party components may
+   carry their own notices and terms.
+3. No additional copyright license is granted here for project-specific
+   application code, scripts, documentation, reports, slides, or gallery assets.
+   Public availability is not a grant of unrestricted reuse. Third-party rights
+   remain with their respective holders.
+4. Data, trained weights, generated images, and binaries are not covered by a
+   blanket license in this file. Consult applicable source/data/distribution terms.
+
+See THIRD_PARTY_NOTICES.md. This notice does not replace, modify, or override
+third-party licenses.
