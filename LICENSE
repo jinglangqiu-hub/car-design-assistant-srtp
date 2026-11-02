@@ -5,9 +5,11 @@ It is not offered under a single blanket open-source license.
 
 1. refs/stylegan2-ada-pytorch/ and copies/modifications of its code remain
    subject to refs/stylegan2-ada-pytorch/LICENSE.txt (NVIDIA Source Code License).
-2. refs/sefa/ retains refs/sefa/LICENSE. Embedded third-party components may
-   carry their own notices and terms.
-3. No additional copyright license is granted here for project-specific
+2. refs/sefa/ retains refs/sefa/LICENSE. Separately identified embedded assets
+   and borrowed code retain their own terms or recorded permission gaps.
+   Additional Bootstrap, normalize.css, and Lato license texts are in LICENSES/.
+3. To the extent the relevant rights are held by project contributors, no
+   additional copyright license is granted here for project-specific
    application code, scripts, documentation, reports, slides, or gallery assets.
    Public availability is not a grant of unrestricted reuse. Third-party rights
    remain with their respective holders.

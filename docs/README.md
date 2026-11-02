@@ -7,7 +7,10 @@
 - [Run, installation, and reproduction prerequisites](reproduction.md)
 - [Experiment settings, evidence, and limitations](experiments.md)
 - [Gallery provenance](../assets/README.md)
+- [Sources, provenance, and bibliography](references.md)
+- [BibTeX references](../references.bib)
 - [Third-party and data permissions](../THIRD_PARTY_NOTICES.md)
+- [Additional nested-asset license texts](../LICENSES/README.md)
 
 ## Historical SRTP archive
 
