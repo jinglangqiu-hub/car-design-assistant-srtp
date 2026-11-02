@@ -11,6 +11,8 @@
 
 ## Historical SRTP archive
 
+The project completed its final defense and was concluded at Chongqing University in **July 2026**.
+
 These files are preserved as project records. Early proposals, planned metrics, and proposed features are not proof of completion. Use the current README and guides for the final scope.
 
 - [Cloud environment and operations log](cloud_env_config.md)

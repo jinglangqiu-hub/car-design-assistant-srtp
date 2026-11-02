@@ -1,5 +1,7 @@
 # Historical defense materials
 
+**Project completed: final defense and project conclusion at Chongqing University, July 2026.**
+
 This directory preserves the original SRTP defense archive, not maintained application source or publication instructions. Use the [current overview](../README.md), [experiment record](../docs/experiments.md), and [run guide](../docs/reproduction.md) for current claims.
 
 - `01_report_and_docs/`: report, presentation, outlines.

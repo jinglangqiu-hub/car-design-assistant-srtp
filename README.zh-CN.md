@@ -2,6 +2,8 @@
 
 **重庆大学 SRTP · AI 辅助的本科早期科研与工程尝试 · 2026**
 
+**项目状态：已于 2026 年 7 月在重庆大学完成答辩并结题。**
+
 **3 类车型模型 · 16,900 张训练图片 · 256 × 256 输出 · Windows 桌面原型**
 
 [English](README.md) · [生成样例](#真实生成样例) · [实现流程](#具体做了什么) · [运行说明](docs/reproduction.md) · [Windows 下载](https://github.com/jinglangqiu-hub/car-design-assistant-srtp/releases/tag/v1.0.0)

@@ -2,6 +2,8 @@
 
 **An AI-assisted early undergraduate project · Chongqing University SRTP · 2026**
 
+**Project status: Completed — defended and concluded at Chongqing University in July 2026.**
+
 A vehicle image generation prototype built with NVIDIA's **StyleGAN2-ADA**, three separately fine-tuned models, and a **Windows desktop interface**.
 
 **3 vehicle models · 16,900 training images · 256 × 256 output · Windows prototype**
