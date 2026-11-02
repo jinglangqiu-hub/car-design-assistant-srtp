@@ -2,9 +2,11 @@
 
 **An AI-assisted early undergraduate project · Chongqing University SRTP · 2026**
 
-A vehicle image generation prototype built with NVIDIA's **StyleGAN2-ADA**, three separately fine-tuned vehicle models, and a **Windows desktop interface**.
+A vehicle image generation prototype built with NVIDIA's **StyleGAN2-ADA**, three separately fine-tuned models, and a **Windows desktop interface**.
 
-[中文说明](README.zh-CN.md) · [Run the application](docs/reproduction.md) · [Training record](docs/experiments.md) · [v1.0.0 release](https://github.com/jinglangqiu-hub/car-design-assistant-srtp/releases/tag/v1.0.0)
+**3 vehicle models · 16,900 training images · 256 × 256 output · Windows prototype**
+
+[中文说明](README.zh-CN.md) · [Gallery](#gallery) · [Implementation](#what-was-built) · [Limitations](#results--limitations) · [Run guide](docs/reproduction.md) · [Windows release](https://github.com/jinglangqiu-hub/car-design-assistant-srtp/releases/tag/v1.0.0)
 
 ## Gallery
 
@@ -12,17 +14,20 @@ A vehicle image generation prototype built with NVIDIA's **StyleGAN2-ADA**, thre
 |:---:|:---:|
 | ![Archived sports output, seed 796724](assets/samples/sports-seed796724.png) | ![Archived sports output, seed 437112](assets/samples/sports-seed437112.png) |
 
-Actual desktop-generated outputs archived on **June 1, 2026**, at **256 × 256** and **truncation ψ = 0.65**. “Sports” is the selected model label; these examples do not consistently exhibit sports-car proportions, illustrating limited category control. Fine details remain imperfect. These selected examples are not a representative evaluation. [Image provenance and original metadata](assets/README.md).
+Original desktop outputs from **June 1, 2026** · **256 × 256** · **truncation ψ = 0.65**. “Sports” records the selected model; the images also illustrate imperfect category control and detail. These are selected examples, not a quality benchmark. [Provenance & parameters](assets/README.md).
 
-The archived sample ZIP contains these same two sports images. Sedan/SUV examples, a GUI screenshot, and a recorded demo are not currently included; this gallery does not demonstrate all three models.
+<details>
+<summary>What the gallery covers</summary>
+
+The repository and archived sample ZIP contain these two sports-model outputs. No sedan/SUV examples, GUI screenshot, or recorded demo are included. The gallery therefore does not demonstrate all three models. Original files and metadata are retained without retouching.
+
+</details>
 
 ## Project background & AI assistance
 
-This project was developed for the **Student Research Training Program (SRTP) at Chongqing University**, under the title “基于生成对抗网络的汽车造型设计辅助系统的开发”. It represents one of my earliest attempts to explore deep learning through an AI-assisted development workflow.
+Developed for the **Student Research Training Program (SRTP) at Chongqing University**, under the title “基于生成对抗网络的汽车造型设计辅助系统的开发”, this is one of my earliest deep-learning projects.
 
-The work focused on adapting an existing implementation to vehicle images and integrating the trained models into a desktop prototype. **It does not propose a new GAN architecture or establish an improvement over StyleGAN2-ADA.**
-
-Generative AI was used extensively in coding, debugging, and documentation. Project-specific scripts and the application should be read as AI-assisted work, rather than evidence of independently authored algorithms. My project work centered on carrying out data preparation, training, environment setup, model integration, and delivery. A reliable line-by-line human/AI authorship breakdown was not recorded, so none is claimed here.
+**Generative AI was used extensively in coding, debugging, and documentation.** My project work centered on carrying out data preparation, training, environment setup, model integration, and delivery with that assistance. The project adapts NVIDIA's existing implementation; it does not propose a new GAN architecture or establish a performance improvement over StyleGAN2-ADA. No independently authored algorithm or quantified human/AI authorship split is claimed.
 
 ## What was built
 
@@ -41,9 +46,9 @@ Generative AI was used extensively in coding, debugging, and documentation. Proj
 | Sedan | 5,492 | 1,000 kimg | +1,500 kimg | `sedan.pkl` |
 | SUV | 9,889 | 1,000 kimg | +1,500 kimg | `suv.pkl` |
 
-Counts come from the archived dataset summary; training budgets and snapshots are recorded in the manifest. A **kimg** is 1,000 training images shown to the discriminator, not 1,000 unique images. Category names reflect the project's custom CompCars grouping; see [experimental details](docs/experiments.md).
+Counts and training stages are documented in the archive. **kimg** measures thousands of training images shown to the discriminator, not unique images. Category names reflect the project's custom grouping. [Data mapping, environment & evidence](docs/experiments.md).
 
-Recorded cloud environment: **Ubuntu 22.04 · RTX 5090 32 GB · Python 3.12.3 · PyTorch 2.7.0+cu128**, batch size 16. These are historical records, not a newly validated compatibility guarantee.
+Recorded cloud environment: **Ubuntu 22.04 · RTX 5090 32 GB · Python 3.12.3 · PyTorch 2.7.0+cu128**, batch size 16.
 
 ### Engineering choices
 
@@ -65,13 +70,19 @@ The main lesson is the distinction between making a pipeline run and demonstrati
 
 ## Run & explore
 
-Clone the repository, obtain trusted weights separately, install a compatible environment, and run:
+| Goal | Start here |
+|---|---|
+| Use the Windows prototype | [v1.0.0 assets](https://github.com/jinglangqiu-hub/car-design-assistant-srtp/releases/tag/v1.0.0) — download the `.exe` and all three `.bin` parts into one folder |
+| Run or inspect the source | [Setup guide](docs/reproduction.md) — configure Python and place trusted weights in `app/models/` |
+| Inspect training evidence | [Experiment record](docs/experiments.md) — settings, mapping, manifest, and reproduction gaps |
+
+From a configured environment at the repository root:
 
 ```powershell
 python app\car_design_assistant.py
 ```
 
-**A clone alone is insufficient:** model weights and training data are excluded from Git. Follow the [run guide](docs/reproduction.md) for model placement, environment checks, installer files, and training prerequisites. Only load trusted `.pkl` weights.
+A clone alone does not include weights or training data. Obtain CompCars through its official process; the three processed dataset ZIPs were removed from the release on **November 2, 2026**. [Data and license notices](THIRD_PARTY_NOTICES.md).
 
 | Location | Purpose |
 |---|---|

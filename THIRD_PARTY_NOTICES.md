@@ -14,7 +14,7 @@ Exact upstream commits are not recorded. Preserve existing headers and licenses,
 
 CompCars restricts access to non-commercial research and prohibits further distribution of database portions outside its stated internal-use exception. Selecting, cropping, or resizing images is not a basis for redistributing them. Obtain authorized data through the official process and keep processed datasets private.
 
-The historical v1.0.0 release included processed training ZIPs. Current staging/upload scripts exclude them; removing existing attachments is a separate release-maintenance operation. Historical availability is not a data access or redistribution permission.
+The three processed CompCars training ZIPs were removed from v1.0.0 on November 2, 2026. Current staging/upload scripts exclude them and reject stale training ZIPs before upload. Historical availability is not a data access or redistribution permission.
 
 Weights/installers require their own provenance and distribution review. This cleanup does not establish that all rights needed for redistribution have been obtained, and does not automatically equate weights with raw images. Gallery examples are model outputs, not training-image copies; no unrestricted reuse license is granted here.
 

@@ -2,11 +2,13 @@
 
 **重庆大学 SRTP · AI 辅助的本科早期科研与工程尝试 · 2026**
 
-[English](README.md) · [运行与复现说明](docs/reproduction.md) · [训练记录](docs/experiments.md)
+**3 类车型模型 · 16,900 张训练图片 · 256 × 256 输出 · Windows 桌面原型**
+
+[English](README.md) · [生成样例](#真实生成样例) · [实现流程](#具体做了什么) · [运行说明](docs/reproduction.md) · [Windows 下载](https://github.com/jinglangqiu-hub/car-design-assistant-srtp/releases/tag/v1.0.0)
 
 本项目为完成重庆大学大学生科研训练计划（SRTP）“基于生成对抗网络的汽车造型设计辅助系统的开发”而开展。使用 NVIDIA 已有的 StyleGAN2-ADA 实现，整理汽车图片、微调三类模型，并集成为 Windows 桌面生成程序。
 
-这是我最早期接触深度学习的一次尝试。代码编写、调试和文档整理广泛使用了生成式 AI，不能将仓库中的代码等同于完全独立编写的成果；也没有记录可靠的逐行人类/AI 贡献比例。我的项目实践主要围绕数据准备、执行训练、环境配置、模型集成和软件交付展开。**项目不提出新模型，也不声称改进了 StyleGAN2-ADA。**
+这是我最早期接触深度学习的一次尝试。**代码编写、调试和文档整理广泛使用了生成式 AI。** 我的项目实践主要围绕在 AI 辅助下执行数据准备、训练、环境配置、模型集成和软件交付展开。项目采用已有模型，不提出新架构，也没有证据证明其性能优于 StyleGAN2-ADA；不声称独立完成算法编写或可量化的人类/AI 贡献比例。
 
 ## 真实生成样例
 
@@ -14,7 +16,14 @@
 |:---:|:---:|
 | ![跑车生成图 seed796724](assets/samples/sports-seed796724.png) | ![跑车生成图 seed437112](assets/samples/sports-seed437112.png) |
 
-两张图均为 2026 年 6 月 1 日归档的真实桌面端输出，原始分辨率 256 × 256，truncation ψ = 0.65。“跑车”指所选模型标签，样例并不稳定呈现跑车比例，也体现了车型控制能力有限。细节仍有缺陷，选出的样例不代表平均质量。Release 样例 ZIP 也只有这两张图，目前没有可展示的轿车/SUV 样例、GUI 截图或演示视频。[图片来源](assets/README.md)。
+2026 年 6 月 1 日归档的真实桌面端输出，原始分辨率 **256 × 256**，**truncation ψ = 0.65**。“跑车”指所选模型标签，图像也体现了车型控制和细节质量的不足；选例不代表整体质量。[来源与参数](assets/README.md)。
+
+<details>
+<summary>展示范围</summary>
+
+仓库与样例 ZIP 均只有这两张 sports 模型输出，没有轿车/SUV 样例、GUI 截图或演示视频，因此当前图集不能证明三个模型的整体效果。原图与元数据均保留，没有修图。
+
+</details>
 
 ## 具体做了什么
 
@@ -47,13 +56,19 @@
 
 ## 运行与资料
 
-克隆后另行获取可信模型，放入 `app/models/`，配置兼容环境后运行：
+| 目标 | 入口 |
+|---|---|
+| 使用 Windows 原型 | [v1.0.0 附件](https://github.com/jinglangqiu-hub/car-design-assistant-srtp/releases/tag/v1.0.0)：将 `.exe` 与三个 `.bin` 分卷放在同一目录 |
+| 从源码运行 | [环境配置指南](docs/reproduction.md)：准备 Python，并把可信权重放入 `app/models/` |
+| 查看实验依据 | [训练记录](docs/experiments.md)：参数、映射、manifest 与复现缺口 |
+
+配置完成后，在仓库根目录运行：
 
 ```powershell
 python app\car_design_assistant.py
 ```
 
-详细步骤与安装包组成见[运行说明](docs/reproduction.md)。结项报告、PPT 和历史记录保留原位置，通过[文档索引](docs/README.md)查找；早期计划不代表最终已完成功能。
+三份处理后的 CompCars 训练集已于 **2026 年 11 月 2 日**从 Release 移除；训练数据应通过官方流程获取。详细步骤与安装包组成见[运行说明](docs/reproduction.md)。结项报告、PPT 和历史记录保留原位置，通过[文档索引](docs/README.md)查找；早期计划不代表最终已完成功能。
 
 ## 来源与授权
 
